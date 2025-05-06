@@ -47,14 +47,7 @@ class NotificationController extends Controller
      */
     private function getAuthenticatedUser()
     {
-        if (Auth::guard('admin')->check()) {
-            return Auth::guard('admin')->user();
-        } elseif (Auth::guard('provider')->check()) {
-            return Auth::guard('provider')->user();
-        }
-        elseif (Auth::guard('agent')->check()) {
-            return Auth::guard('agent')->user();
-        }
-        return null; // إذا لم يكن المستخدم مسجل دخول
+        return Auth::check() ? Auth::user() : null;
+
     }
 }

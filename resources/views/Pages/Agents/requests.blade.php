@@ -32,7 +32,7 @@
                                         <thead>
                                         <tr class="alert-success">
 
-                                       <th>اسم الرحلة</th>
+                                       <th> رقم الملف</th>
                                        <th>الحالة</th>
                                        <th>تفاصيل الطلب</th>
                                    </tr>
@@ -40,16 +40,21 @@
                                    <tbody>
                                    @foreach($requests as $request)
                                                 <tr>
-                             <td>{{ $request->trip->name }}</td>
+                                                    <td>
+
+                                                            {{ $request->receipt_number?? 'غير متاح' }}<br>
+
+                                                    </td>
                              <td>
-                                       @if($request->status == 'pending')
-                                            <span class="badge bg-warning">قيد الانتظار</span>
-                                        @elseif($request->status == 'confirmed')
-                                   <span class="badge bg-success">مقبولة</span>
-                               @else
-                                   <span class="badge bg-danger">مرفوضة</span>
-                               @endif
-                                        </td>
+                                 @if($request->details->contains('status', 'pending'))
+                                     <span class="badge bg-warning">قيد الانتظار</span>
+                                 @elseif($request->details->contains('status', 'confirmed'))
+                                     <span class="badge bg-success">مقبولة</span>
+                                 @else
+                                     <span class="badge bg-danger">مرفوضة</span>
+                                 @endif
+
+                             </td>
                                  <td>
                                      <a href="{{ route('trips.details', $request->id) }}" class="btn btn-primary">
                                          تفاصيل الرحلة

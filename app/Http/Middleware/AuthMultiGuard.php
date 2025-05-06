@@ -14,13 +14,13 @@ class AuthMultiGuard
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)    {
-        if (Auth::guard('admin')->check() || Auth::guard('provider')->check() || Auth::guard('agent')->check()) {
+    public function handle(Request $request, Closure $next)
+    {
+        if (Auth::check() && in_array(Auth::user()->role, ['admin', 'provider', 'agent'])) {
             return $next($request);
         }
 
         return redirect()->route('login')->with('error', 'You must be logged in.');
-
-
     }
+
 }

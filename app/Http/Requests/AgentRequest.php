@@ -23,10 +23,11 @@ class AgentRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:agents,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'age' => 'nullable|integer|min:18',
-            'national_id' => 'required|numeric|digits:14|unique:agents,national_id',
+            'national_id' => 'required|numeric|unique:users,national_id',
+            'code'=>'required|numeric'
         ];
     }
     public function messages()

@@ -52,7 +52,10 @@
                             <label for="id_number">رقم الهوية</label>
                             <input type="text" value="{{$agent->national_id}}" name="national_id" class="form-control">
                         </div>
-
+                        <div class="form-group col">
+                            <label for="id_number">كود المندوب</label>
+                            <input type="text" value="{{$agent->code}}" name="code" class="form-control">
+                        </div>
                         <br>
                         <button type="submit" class="btn btn-primary">تأكيد</button>
                     </form>

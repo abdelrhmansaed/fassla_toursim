@@ -45,57 +45,59 @@
                                         </thead>
                                         <tbody>
                                         @foreach($requests as $request)
-                                            <tr>
-                                                <td>{{ $request->trip->name }}</td>
-                                                <td>{{ $request->agent->name }}</td>
-                                                <td>{{ optional($request->detail)->total_people }}</td>
-                                                <td>{{ optional($request->detail)->male_count }}</td>
-                                                <td>{{ optional($request->detail)->female_count }}</td>
-                                                <td>{{ optional($request->detail)->price }}</td>
+                                            @foreach($request->details as $detail)
+                                                <tr>
+                                                    <td>{{ optional($detail->trip)->name ?? 'غير متاح' }}</td>
+                                                    <td>{{ optional($request->agent)->name ?? 'غير متاح' }}</td>
+                                                    <td>{{ optional($detail)->total_people ?? 'غير متاح' }}</td>
+                                                    <td>{{ optional($detail)->adult_count ?? 'غير متاح' }}</td>
+                                                    <td>{{ optional($detail)->children_count ?? 'غير متاح' }}</td>
+                                                    <td>{{ optional($detail)->total_price ?? 'غير متاح' }}</td>
+                                                    <td>
+                                                        @if($detail->status == 'waiting_confirmation')
+                                                            <span class="badge bg-danger"> غي انتظار الموافقة </span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if(!empty($detail->image))
+                                                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#paymentModal-{{ $detail->id }}">
+                                                                إيصال الدفع
+                                                            </button>
 
-
-                                                <td>
-                                                    <span class="badge bg-warning">قيد الانتظار</span>
-                                                </td>
-
-                                                <td>
-                                                    @if(optional($request->detail)->image)
-                                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#paymentModal-{{ $request->id }}">
-                                                            إيصال الدفع
-                                                        </button>
-
-                                                        <!-- نافذة منبثقة لعرض الصورة -->
-                                                        <div class="modal fade" id="paymentModal-{{ $request->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title">إيصال الدفع</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body text-center">
-                                                                        <img src="{{ Storage::url($request->detail->image) }}" class="img-fluid" alt="إيصال الدفع">
+                                                            <!-- نافذة منبثقة لعرض الصورة -->
+                                                            <div class="modal fade" id="paymentModal-{{ $detail->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">إيصال الدفع</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body text-center">
+                                                                            <img src="{{ asset('storage/' . $detail->image) }}" class="img-fluid" alt="إيصال الدفع">
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    @else
-                                                        <span class="text-danger">لم يتم رفع إيصال</span>
-                                                    @endif
-                                                </td>
+                                                        @else
+                                                            <span class="text-danger">لم يتم رفع إيصال</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <form action="{{ route('provider.approveRequest', $detail->id) }}" method="POST"  style="display:inline;">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="btn btn-success">قبول الطلب</button>
+                                                        </form>
 
-                                                <td>
-                                                    <form action="{{ route('provider.approveRequest', $request->id) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-success">قبول الطلب</button>
-                                                    </form>
-                                                    <form action="{{ route('provider.rejectRequest', $request->id) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-danger">رفض الطلب</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
+                                                        <form action="{{ route('provider.rejectRequest', $detail->id) }}" method="POST" style="display:inline;" >
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="btn btn-danger">رفض الطلب</button>
+                                                        </form>
+                                                    </td>
+
+                                                </tr>
+                                            @endforeach
                                         @endforeach
                                         </tbody>
                                     </table>

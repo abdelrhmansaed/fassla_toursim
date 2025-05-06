@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('type');
-            $table->date('date');
-            $table->string('description');
+            $table->integer('adult_price');
+            $table->integer('child_price');
             $table->timestamps();
         });
     }

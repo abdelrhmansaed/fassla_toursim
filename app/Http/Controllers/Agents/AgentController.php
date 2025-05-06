@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Agents;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AgentRequest;
-use App\Models\Admin;
-use App\Models\Agent;
+
 use App\Models\Provider;
 use App\Models\Trip;
 use App\Models\TripRequest;
 use App\Models\TripRequestDetail;
+use App\Models\User;
 use App\Notifications\TripRequested;
 use App\Repository\AgentRepositoryInterface;
 use Illuminate\Http\Request;
@@ -40,7 +40,7 @@ class AgentController extends Controller
         return $this->agent->edit($id);
     }
 
-    public function update(Request $request, Agent $agent)
+    public function update(Request $request, User $agent)
     {
         try {
             // تحديث البيانات
@@ -111,9 +111,12 @@ class AgentController extends Controller
 
     public function showProfile($id)
     {
-        return $this->agent->showProfile($id); 
+        return $this->agent->showProfile($id);
     }
 
+    public function pay(Request $request, $tripRequestDetailId){
+        return $this->agent->pay($request, $tripRequestDetailId);
+    }
 
 
 }

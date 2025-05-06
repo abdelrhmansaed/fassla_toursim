@@ -51,9 +51,9 @@ class TripController extends Controller
     }
 
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        return $this->trip->destroy($request);
+        return $this->trip->destroy($id);
     }
 //    public function showRequestForm(Trip $trip) {
 //        return view('Pages.Trips.details', compact('trip'));
@@ -107,5 +107,11 @@ class TripController extends Controller
 
         return $pdf->download('trip_details.pdf');
     }
+
+    public function getSubTripTypes($tripId){
+        return $this->trip->getSubTripTypes($tripId);
+    }
+
+
 
 }

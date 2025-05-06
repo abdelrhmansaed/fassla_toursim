@@ -18,15 +18,23 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->enum('role', ['admin', 'agent', 'provider']);  // تحديد الدور (admin, agent, provider)
+            $table->string('national_id')->nullable()->unique();  // رقم الهوية الوطنية (اختياري للبروفايدر والمندوب)
+            $table->integer('age')->nullable();// العمر (اختياري للبروفايدر والمندوب)
+            $table->integer('code')->nullable();
+            $table->decimal('commission_percent', 5, 2)->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
 
+        // جدول reset passwords
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
+        // جدول الجلسات
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();

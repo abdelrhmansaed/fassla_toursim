@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Provider;
 use App\Models\TripRequest;
+use App\Models\User;
 use App\Notifications\TripAccepted;
 use App\Notifications\TripApproved;
 use App\Notifications\TripApprovedPendingPayment;
@@ -39,7 +40,7 @@ class ProviderController extends Controller
         return $this->provider->edit($id);
     }
 
-    public function update(Request $request, Provider $provider)
+    public function update(Request $request, User $provider)
     {
         try {
             // تحديث البيانات
@@ -64,9 +65,9 @@ class ProviderController extends Controller
         return $this->provider->tripRequests();
     }
 
-    public function approveRequestWaitingPayment($request_id)
+    public function approveRequestWaitingPayment(Request $request,$request_id)
     {
-        return $this->provider->approveRequestWaitingPayment($request_id);
+        return $this->provider->approveRequestWaitingPayment( $request,$request_id);
     }
     public function approveRequest($request_id)
     {
@@ -74,9 +75,9 @@ class ProviderController extends Controller
     }
 
 
-    public function rejectRequest($request_id)
+    public function rejectRequest(Request $request,$request_id)
     {
-        return $this->provider->rejectRequest($request_id);
+        return $this->provider->rejectRequest($request,$request_id);
     }
 
 
@@ -101,6 +102,9 @@ class ProviderController extends Controller
     {
         return $this->provider->showProfile($id);
     }
-
+    public function providerApprovedTrips()
+    {
+        return $this->provider->providerApprovedTrips();
+    }
 
 }

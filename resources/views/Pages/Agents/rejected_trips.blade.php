@@ -1,62 +1,60 @@
 
 @extends('Dashboard.layouts.master')
-@section('css')
-@endsection
-@section('page-header')
-    <!-- breadcrumb -->
-    <div class="breadcrumb-header justify-content-between">
-        <div class="my-auto">
-            <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الرحلات الملغية</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0"></span>
-            </div>
-        </div>
 
-    </div>
-
-
-@endsection
 @section('content')
 
 
-    <div class="row">
-        <div class="col-md-12 mb-30">
-            <div class="card card-statistics h-100">
-                <div class="card-body">
-                    <div class="col-xl-12 mb-30">
-                        <div class="card card-statistics h-100">
-                            <div class="card-body">
+    <div class="container py-4">
+        <div class="card shadow-lg">
+            <div class="card-header bg-danger text-white text-center">
+                <h2>الرحلات المرفوضة</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center">
+                        <thead class="bg-dark text-white">
+                        <tr>
+                            <th>تاريخ الحجز</th>
+                            <th>رقم الطلب</th>
+                            <th>اسم الفندق</th>
+                            <th>الرحلة</th>
+                            <th>المزود</th>
+                            <th>عدد الأشخاص</th>
+                            <th>اخمالي سعر البيع بالدولار</th>
+                            <th>اخمالي سعر البيع باليورو</th>
+                            <th>اخمالي سعر البيع بالمصري</th>
+                            <th>إجمالي السعر</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($trips as $trip)
+                            @foreach($trip->details as $detail)
 
-                                <div class="table-responsive">
-                                    <table id="datatable" class="table  table-hover table-sm table-bordered p-0"
-                                           data-page-length="50" style="text-align: center">
-                                        <thead>
-                                        <tr>
-                                            <th>اسم الرحلة</th>
-                                            <th>تفاصيل الطلب</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($trips as $trip)
-                                            <tr>
-                                                <td>{{ $trip->trip->name }}</td>
-                                                <td>
-                                                    <a href="{{ route('trips.details', $trip->id) }}" class="btn btn-primary">
-                                                        تفاصيل الرحلة
-                                                    </a>                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                                <tr>
+                                    <td> {{ \Carbon\Carbon::parse($trip->booking_datetime)->format('d/m/Y g:i A') ?? 'غير متاح' }}</td>
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <td>{{ optional($trip)->receipt_number ?? 'غير متاح' }}</td>
+
+                                    <td>{{ optional($trip)->hotel_name ?? 'غير متاح' }}</td>
+                                    <td>
+                                        {{ optional($detail->tripType)->type ?? 'غير متاح' }}
+                                        @if($detail->subTripType)
+                                            - {{ optional($detail->subTripType)->type ?? 'غير متاح'}}
+                                        @endif
+                                    </td>
+                                    <td>{{ optional($detail->provider)->name ?? 'غير متاح' }}</td>
+                                    <td>{{ $detail->total_people }}</td>
+                                    <td>{{ number_format($detail->total_price_usd, 2) }} </td>
+                                    <td>{{ number_format($detail->total_price_eur, 2) }} </td>
+                                    <td>{{ number_format($detail->total_price_egp, 2) }} </td>
+                                    <td class="fw-bold text-success">{{ number_format($detail->total_price, 2) }} جنيه</td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
-    </div>
-
     </div>
     <!-- Container closed -->
     </div>

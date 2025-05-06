@@ -53,6 +53,10 @@
                             <input type="text" value="{{$provider->national_id}}" name="national_id" class="form-control">
                         </div>
 
+                        <div class="form-group col">
+                            <label for="id_number">رقم الهوية</label>
+                            <input type="text" value="{{$provider->code}}" name="code" class="form-control">
+                        </div>
                         <br>
                         <button type="submit" class="btn btn-primary">تأكيد</button>
                     </form>

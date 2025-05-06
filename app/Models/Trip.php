@@ -8,9 +8,9 @@ class Trip extends Model
 {
     protected $fillable = [
         'name',
-        'date',
         'type',
-        'description',
+        'adult_price',
+        'child_price',
     ];
 
     public function tripRequests()

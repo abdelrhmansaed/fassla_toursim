@@ -14,8 +14,9 @@ interface TripRepositoryInterface
     public function store(Request  $request );
     public function edit($id);
     public function update(Request $request, $id);
-    public function destroy($request);
+    public function destroy($id);
 
+    public function getSubTripTypes($tripId);
 
 
 
