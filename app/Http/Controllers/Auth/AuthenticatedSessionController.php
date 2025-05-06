@@ -12,36 +12,68 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * عرض صفحة تسجيل الدخول
      */
-    public function create(): View
+    public function create()
     {
+        if (Auth::check()) {
+            return $this->redirectBasedOnRole(Auth::user());
+        }
+
         return view('auth.login');
     }
 
     /**
-     * Handle an incoming authentication request.
+     * معالجة تسجيل الدخول
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        $request->session()->regenerate();
+        $credentials = $request->only('email', 'password');
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // توجيه حسب الدور
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role === 'provider') {
+                return redirect()->route('provider.dashboard');
+            } elseif ($user->role === 'agent') {
+                return redirect()->route('agent.dashboard');
+            }
+        }
+
+        return back()->withErrors(['email' => 'Invalid email or password.']);
     }
 
     /**
-     * Destroy an authenticated session.
+     * تسجيل خروج المستخدم
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
-
+        Auth::logout();
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('login');
+    }
+
+    /**
+     * إعادة توجيه المستخدم بناءً على دوره
+     */
+    private function redirectBasedOnRole($user)
+    {
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'provider' => redirect()->route('provider.dashboard'),
+            'agent' => redirect()->route('agent.dashboard'),
+            default => redirect()->route('login'),
+        };
     }
 }

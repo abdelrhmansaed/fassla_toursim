@@ -33,9 +33,18 @@
 
                                     <div class="card-sigin">
                                         <div class="main-signup-header">
-                                            <h2>Welcome back!</h2>
-                                            <h5 class="font-weight-semibold mb-4">Please sign in to continue.</h5>
+                                            <h2>{{trans('login/login_trans.Welcome')}}</h2>
 
+                                            <h5 class="font-weight-semibold mb-4">Please sign in to continue.</h5>
+                                            @if ($errors->any())
+                                                <div class="alert alert-danger">
+                                                    <ul>
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
                                             <!--  Login Form -->
                                             <form method="POST" action="{{ route('auth.login') }}">
                                                 @csrf
@@ -55,7 +64,6 @@
                                             <!-- Forgot Password & Register Links -->
                                             <div class="main-signin-footer mt-5">
                                                 <p><a href="#">Forgot password?</a></p>
-                                                <p>Don't have an account? <a href="{{ route('auth.register') }}">Create an Account</a></p>
                                             </div>
                                         </div>
                                     </div> <!-- End Card -->
